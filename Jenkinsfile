@@ -2,6 +2,13 @@ pipeline {
     agent any
 
     stages {
+        stage('Verificar Instalación') {
+            steps {
+                sh 'python3 --version'
+                sh 'pip3 --version'
+            }
+        }
+
         stage('Clonar Repositorio') {
             steps {
                 git url: 'https://github.com/bcaal87/pruebasunitarias.git', branch: 'main'
@@ -30,3 +37,4 @@ pipeline {
         }
     }
 }
+
