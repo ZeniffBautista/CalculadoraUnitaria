@@ -15,15 +15,21 @@ pipeline {
             }
         }
 
-        stage('Compilar/Preparar Entorno') {
+        stage('Crear Entorno Virtual') {
             steps {
-                sh 'pip3 install -r requirements.txt'
+                sh 'python3 -m venv venv'
+            }
+        }
+
+        stage('Activar Entorno Virtual y Instalar Dependencias') {
+            steps {
+                sh './venv/bin/pip install -r requirements.txt'
             }
         }
 
         stage('Ejecutar Pruebas') {
             steps {
-                sh 'python3 app.py'
+                sh './venv/bin/python app.py'
             }
         }
     }
