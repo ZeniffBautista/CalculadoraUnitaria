@@ -27,7 +27,7 @@ pipeline {
             }
         }
 
-        stage('Ejecutar Pruebas') {
+        stage('Ejecutar Pruebas matematicas') {
             steps {
                 sh './venv/bin/python app.py'
             }
