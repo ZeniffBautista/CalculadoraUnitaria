@@ -1,54 +1,32 @@
 pipeline {
-    agent any
-
-    parameters {
-        booleanParam(name: 'RUN_PROBAR_APLICACION', defaultValue: true, description: 'Ejecutar la aplicación')
-        booleanParam(name: 'RUN_CORRER_PRUEBAS', defaultValue: true, description: 'Ejecutar pruebas unitarias')
-        booleanParam(name: 'RUN_LIMPIAR_AWS', defaultValue: false, description: 'Limpiar recursos en AWS')
+    agent {
+        docker { image 'python:3.12' }
     }
-
     stages {
-        stage('Probar Aplicación') {
-            when {
-                expression { params.RUN_PROBAR_APLICACION }
-            }
+        stage('Checkout') {
             steps {
-                script {
-                    // Comando para probar la aplicación
-                    sh 'python3 app.py'
-                }
+                checkout scm
             }
         }
-        stage('Correr Pruebas') {
-            when {
-                expression { params.RUN_CORRER_PRUEBAS }
-            }
+        stage('Instalar Dependencias') {
             steps {
-                script {
-                    // Comando para ejecutar pruebas unitarias
-                    sh 'python3 -m unittest discover -s tests'
-                }
+                sh 'pip install --no-cache-dir -r requirements.txt'
             }
         }
-        stage('Limpiar AWS') {
-            when {
-                expression { params.RUN_LIMPIAR_AWS }
-            }
+        stage('Ejecutar Pruebas') {
             steps {
-                script {
-                    // Comando para limpiar recursos en AWS
-                    sh 'aws ec2 terminate-instances --instance-ids <instance-id>'
-                }
+                sh 'python -m unittest discover'
             }
         }
     }
     post {
         always {
-            // Limpia el espacio de trabajo
             cleanWs()
         }
     }
 }
+
+
 
 
 
