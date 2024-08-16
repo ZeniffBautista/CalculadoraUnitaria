@@ -1,6 +1,9 @@
 pipeline {
     agent {
-        docker { image 'python:3.12' }
+        docker {
+            image 'python:3.12'
+            args '-u root' // Ejecutar como root para evitar problemas de permisos
+        }
     }
     stages {
         stage('Checkout') {
@@ -10,7 +13,10 @@ pipeline {
         }
         stage('Instalar Dependencias') {
             steps {
-                sh 'pip install --user --no-cache-dir -r requirements.txt'
+                script {
+                    sh 'pip install --upgrade pip' // Asegúrate de tener la última versión de pip
+                    sh 'pip install --user --no-cache-dir -r requirements.txt'
+                }
             }
         }
         stage('Ejecutar Pruebas') {
@@ -25,6 +31,7 @@ pipeline {
         }
     }
 }
+
 
 
 
