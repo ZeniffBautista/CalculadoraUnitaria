@@ -1,25 +1,12 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.12'
+            args '-v /var/lib/jenkins/workspace/DemoTest:/workspace'
+        }
+    }
 
     stages {
-        stage('Verificar Instalación') {
-            steps {
-                sh 'python3 --version'
-                sh 'pip3 --version'
-                sh 'pip install --user pipx'
-                sh 'pipx --version'
-            }
-        }
-
-        stage('Crear Entorno Virtual') {
-            steps {
-                sh '''
-                    pipx install virtualenv
-                    pipx runpip virtualenv install --upgrade pip
-                '''
-            }
-        }
-
         stage('Clonar Repositorio') {
             steps {
                 git url: 'https://github.com/bcaal87/pruebasunitarias.git', branch: 'main'
@@ -28,17 +15,13 @@ pipeline {
 
         stage('Instalar Dependencias') {
             steps {
-                sh '''
-                    pipx runpip virtualenv install -r requirements.txt
-                '''
+                sh 'pip install -r requirements.txt'
             }
         }
 
         stage('Ejecutar Pruebas matematicas') {
             steps {
-                sh '''
-                    pipx run virtualenv python app.py
-                '''
+                sh 'python app.py'
             }
         }
     }
@@ -52,7 +35,3 @@ pipeline {
         }
     }
 }
-
-
-
-
