@@ -1,30 +1,21 @@
 pipeline {
     agent {
-        docker {
-            image 'python:3.12'
-            args '-u root:root'  // Ejecutar como root para evitar problemas de permisos
-        }
+        docker { image 'python:3.12' }
     }
     stages {
-        stage('Checkout SCM') {
+        stage('Checkout') {
             steps {
                 checkout scm
             }
         }
         stage('Instalar Dependencias') {
             steps {
-                script {
-                    // Instalar dependencias directamente
-                    sh 'pip install --no-cache-dir -r requirements.txt'
-                }
+                sh 'pip install --no-cache-dir -r requirements.txt'
             }
         }
         stage('Ejecutar Pruebas') {
             steps {
-                script {
-                    // Ejecutar pruebas unitarias
-                    sh 'python -m unittest discover'
-                }
+                sh 'python -m unittest discover'
             }
         }
     }
@@ -34,6 +25,8 @@ pipeline {
         }
     }
 }
+
+
 
 
 
