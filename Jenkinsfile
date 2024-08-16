@@ -5,8 +5,8 @@ pipeline {
         stage('Verificar Instalación') {
             steps {
                 sh 'python3 --version'
-                sh 'pip3 --version || sudo apt-get install python3-pip -y'
-                sh 'pip3 install virtualenv || sudo apt-get install python3-venv -y'
+                sh 'pip3 --version'
+                sh 'pipx --version'
             }
         }
 
@@ -16,29 +16,15 @@ pipeline {
             }
         }
 
-        stage('Crear Entorno Virtual') {
+        stage('Crear Entorno Virtual y Instalar Dependencias') {
             steps {
-                sh 'python3 -m venv venv'
-            }
-        }
-
-        stage('Activar Entorno Virtual y Instalar Dependencias') {
-            steps {
-                sh '''
-                    set -e
-                    source ./venv/bin/activate
-                    pip install -r requirements.txt
-                '''
+                sh 'pipx runpip venv install -r requirements.txt'
             }
         }
 
         stage('Ejecutar Pruebas matematicas') {
             steps {
-                sh '''
-                    set -e
-                    source ./venv/bin/activate
-                    python app.py
-                '''
+                sh 'pipx run venv python app.py'
             }
         }
     }
@@ -52,4 +38,5 @@ pipeline {
         }
     }
 }
+
 
