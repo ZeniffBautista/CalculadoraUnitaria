@@ -5,7 +5,8 @@ pipeline {
         stage('Verificar Instalación') {
             steps {
                 sh 'python3 --version'
-                sh 'pip3 --version'
+                sh 'pip3 --version || sudo apt-get install python3-pip -y'
+                sh 'pip3 install virtualenv || sudo apt-get install python3-venv -y'
             }
         }
 
@@ -23,13 +24,21 @@ pipeline {
 
         stage('Activar Entorno Virtual y Instalar Dependencias') {
             steps {
-                sh './venv/bin/pip install -r requirements.txt'
+                sh '''
+                    set -e
+                    source ./venv/bin/activate
+                    pip install -r requirements.txt
+                '''
             }
         }
 
         stage('Ejecutar Pruebas matematicas') {
             steps {
-                sh './venv/bin/python app.py'
+                sh '''
+                    set -e
+                    source ./venv/bin/activate
+                    python app.py
+                '''
             }
         }
     }
