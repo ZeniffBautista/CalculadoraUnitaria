@@ -1,6 +1,9 @@
 pipeline {
     agent {
-        docker { image 'python:3.12' }
+        docker {
+            image 'python:3.12'
+            args '-u root'
+        }
     }
     stages {
         stage('Checkout') {
@@ -15,16 +18,12 @@ pipeline {
         }
         stage('Ejecutar Pruebas') {
             steps {
-                sh 'python -m unittest discover'
+                sh 'pytest'
             }
         }
     }
-    post {
-        always {
-            cleanWs()
-        }
-    }
 }
+
 
 
 
