@@ -1,9 +1,6 @@
 pipeline {
     agent {
-        docker {
-            image 'python:3.12'
-            args '-u root' // Ejecutar como root
-        }
+        docker { image 'python:3.12' }
     }
     stages {
         stage('Checkout') {
@@ -28,6 +25,7 @@ pipeline {
         }
     }
 }
+
 
 
 
