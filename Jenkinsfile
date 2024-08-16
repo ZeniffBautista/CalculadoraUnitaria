@@ -6,15 +6,16 @@ pipeline {
             steps {
                 sh 'python3 --version'
                 sh 'pip3 --version'
+                sh 'pip install --user pipx'
+                sh 'pipx --version'
             }
         }
 
         stage('Crear Entorno Virtual') {
             steps {
                 sh '''
-                    python3 -m venv venv
-                    source venv/bin/activate
-                    pip install --upgrade pip
+                    pipx install virtualenv
+                    pipx runpip virtualenv install --upgrade pip
                 '''
             }
         }
@@ -28,8 +29,7 @@ pipeline {
         stage('Instalar Dependencias') {
             steps {
                 sh '''
-                    source venv/bin/activate
-                    pip install -r requirements.txt
+                    pipx runpip virtualenv install -r requirements.txt
                 '''
             }
         }
@@ -37,8 +37,7 @@ pipeline {
         stage('Ejecutar Pruebas matematicas') {
             steps {
                 sh '''
-                    source venv/bin/activate
-                    python app.py
+                    pipx run virtualenv python app.py
                 '''
             }
         }
@@ -53,6 +52,7 @@ pipeline {
         }
     }
 }
+
 
 
 
