@@ -14,3 +14,4 @@ COPY . /app/
 # Comando por defecto para ejecutar las pruebas
 CMD ["python", "-m", "unittest", "discover"]
 
+

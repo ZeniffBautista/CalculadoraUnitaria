@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'python:3.12'
-            args '-u root:root'  // Usa el usuario root para evitar problemas de permisos
+            args '-u root:root'  // Ejecutar como root para evitar problemas de permisos
         }
     }
     stages {
@@ -14,7 +14,7 @@ pipeline {
         stage('Instalar Dependencias') {
             steps {
                 script {
-                    // Instalar dependencias
+                    // Instalar dependencias directamente
                     sh 'pip install -r requirements.txt'
                 }
             }
