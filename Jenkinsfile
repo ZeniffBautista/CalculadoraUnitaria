@@ -1,30 +1,42 @@
 pipeline {
-    agent {
-        docker { image 'python:3.12' }
-    }
+    agent any  // Ejecutar en cualquier agente disponible
+
     stages {
-        stage('Checkout') {
+        stage('Probar Aplicación') {
             steps {
-                checkout scm
+                script {
+                    // Aquí puedes incluir comandos para probar tu aplicación
+                    // Por ejemplo, si es una aplicación Python:
+                    sh 'python3 app.py'
+                }
             }
         }
-        stage('Instalar Dependencias') {
+        stage('Correr Pruebas') {
             steps {
-                sh 'pip install --no-cache-dir -r requirements.txt'
+                script {
+                    // Ejecutar las pruebas unitarias
+                    sh 'python3 -m unittest discover -s tests'
+                }
             }
         }
-        stage('Ejecutar Pruebas') {
+        stage('Limpiar AWS') {
             steps {
-                sh 'python -m unittest discover'
+                script {
+                    // Comandos para limpiar recursos en AWS
+                    // Por ejemplo, usando AWS CLI para eliminar instancias o volúmenes
+                    sh 'aws ec2 terminate-instances --instance-ids <instance-id>'
+                }
             }
         }
     }
     post {
         always {
-            cleanWs()
+            // Limpieza general si es necesario
+            cleanWs()  // Limpia el espacio de trabajo después de la construcción
         }
     }
 }
+
 
 
 
