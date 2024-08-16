@@ -1,49 +1,49 @@
 pipeline {
     agent {
         docker {
-            image 'python:3.12' // Imagen base de Python 3.12
-            args '-v /var/lib/jenkins/workspace:/workspace' // Monta el directorio de trabajo en el contenedor
+            image 'python:3.12'
+            args '-v /var/lib/jenkins/workspace:/workspace -v /root/.cache:/root/.cache'
         }
     }
     stages {
         stage('Verificar Instalación') {
             steps {
-                sh 'python3 --version' // Verifica la versión de Python
-                sh 'pip3 --version' // Verifica la versión de pip
+                sh 'python3 --version'
+                sh 'pip3 --version'
             }
         }
         stage('Instalar Dependencias') {
             steps {
-                sh 'pip install virtualenv' // Instala virtualenv dentro del contenedor Docker
+                sh 'pip install --user virtualenv'
             }
         }
         stage('Clonar Repositorio') {
             steps {
-                sh 'git clone https://github.com/bcaal87/pruebasunitarias.git' // Clona el repositorio en el contenedor
+                // Aquí puedes agregar los pasos para clonar tu repositorio
             }
         }
         stage('Crear Entorno Virtual') {
             steps {
-                sh 'python3 -m venv venv' // Crea un entorno virtual
+                sh 'python3 -m venv venv'
             }
         }
         stage('Activar Entorno Virtual e Instalar Dependencias') {
             steps {
-                sh '. venv/bin/activate && pip install -r pruebasunitarias/requirements.txt' // Activa el entorno virtual e instala dependencias
+                sh 'source venv/bin/activate && pip install -r requirements.txt'
             }
         }
-        stage('Ejecutar Pruebas matematicas') {
+        stage('Ejecutar Pruebas matemáticas') {
             steps {
-                sh '. venv/bin/activate && python pruebasunitarias/test_math.py' // Ejecuta las pruebas matemáticas
+                sh 'source venv/bin/activate && pytest'
             }
         }
     }
     post {
         always {
-            echo 'Pipeline terminado.' // Mensaje al finalizar el pipeline
+            echo 'Pipeline terminado.'
         }
         failure {
-            echo 'Una o más pruebas fallaron.' // Mensaje en caso de falla
+            echo 'Una o más pruebas fallaron.'
         }
     }
 }
