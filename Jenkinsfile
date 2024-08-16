@@ -10,7 +10,7 @@ pipeline {
         }
         stage('Instalar Dependencias') {
             steps {
-                sh 'pip install --no-cache-dir -r requirements.txt'
+                sh 'pip install --user --no-cache-dir -r requirements.txt'
             }
         }
         stage('Ejecutar Pruebas') {
@@ -25,6 +25,7 @@ pipeline {
         }
     }
 }
+
 
 
 
