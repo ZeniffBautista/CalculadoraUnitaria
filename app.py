@@ -1,7 +1,7 @@
 # app.py
 
 def suma(a, b):
-    return a + b
+    return b + a
 
 def resta(a, b):
     return a - b
