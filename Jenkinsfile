@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        docker { image 'python:3.12' }
-    }
+    agent any  // Usando 'any' para que el pipeline corra en cualquier nodo disponible
     stages {
         stage('Checkout') {
             steps {
@@ -10,12 +8,12 @@ pipeline {
         }
         stage('Instalar Dependencias') {
             steps {
-                sh 'pip install --no-cache-dir -r requirements.txt'
+                bat 'pip install --no-cache-dir -r requirements.txt'  // Usar 'bat' en lugar de 'sh'
             }
         }
         stage('Ejecutar Pruebas') {
             steps {
-                sh 'python -m unittest discover'
+                bat 'python -m unittest discover'  // Usar 'bat' en lugar de 'sh'
             }
         }
     }
@@ -25,18 +23,3 @@ pipeline {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
